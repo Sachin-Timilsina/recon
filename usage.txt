@@ -1,0 +1,25 @@
+HOW TO USE
+==========
+
+1. Run the script:
+   ./recon.sh -d example.com -w my_wordlist.txt
+
+FOLDER STRUCTURE GENERATED:
+recon_example.com_YYYYMMDD/
+├── passive/
+│   └── passive-subdomain.txt (Subfinder results)
+├── active/
+│   ├── resolved.txt          (Resolved passive subdomains)
+│   ├── bruteforce-results.txt (Puredns brute results)
+│   ├── permutations.txt      (Alterx + Puredns results)
+│   └── final-resolved.txt    (Combined unique resolved list)
+├── web/
+│   └── metadata.txt          (Httpx technology & status codes)
+├── network/
+│   ├── services.txt          (Naabu port scan results)
+│   └── nmap_report.txt       (Detailed Nmap scan of the domain)
+└── reports/
+    ├── final_report.json     (Clean JSON data)
+    └── final_report.txt      (Human-readable summary)
+
+Note: No -r (resolvers) flag is needed; Puredns uses system defaults.
