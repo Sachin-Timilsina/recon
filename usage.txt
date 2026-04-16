@@ -1,25 +1,47 @@
-HOW TO USE
-==========
+SUBDOMAIN RECONNAISSANCE TOOL: USAGE GUIDE
+==========================================
 
-1. Run the script:
-   ./recon.sh -d example.com -w my_wordlist.txt
+The script automates a 5-phase reconnaissance workflow, outputting organized
+text files and a final professional Markdown summary.
 
-FOLDER STRUCTURE GENERATED:
-recon_example.com_YYYYMMDD/
-├── passive/
-│   └── passive-subdomain.txt (Subfinder results)
-├── active/
-│   ├── resolved.txt          (Resolved passive subdomains)
-│   ├── bruteforce-results.txt (Puredns brute results)
-│   ├── permutations.txt      (Alterx + Puredns results)
-│   └── final-resolved.txt    (Combined unique resolved list)
-├── web/
-│   └── metadata.txt          (Httpx technology & status codes)
-├── network/
-│   ├── services.txt          (Naabu port scan results)
-│   └── nmap_report.txt       (Detailed Nmap scan of the domain)
-└── reports/
-    ├── final_report.json     (Clean JSON data)
-    └── final_report.txt      (Human-readable summary)
+BASIC RUN:
+----------
+1. Ensure permissions are set:
+   chmod +x recon.sh
 
-Note: No -r (resolvers) flag is needed; Puredns uses system defaults.
+2. Execute with target domain:
+   ./recon.sh -d example.com
+
+ADVANCED RUN (Rate Limited):
+----------------------------
+Use these flags if you are on a home network or encountering packet loss:
+   ./recon.sh -d example.com -t 25 -m 500 -w /path/to/wordlist.txt
+
+FLAGS:
+------
+-d [domain]    : (Required) The target domain to scan.
+-t [threads]   : (Optional) Sets concurrency for puredns and httpx. 
+                 Default: 50. Lower this (e.g., 20) if results seem missing.
+-m [rate]      : (Optional) Sets --min-rate for Naabu and Nmap. 
+                 Default: 1000.
+-w [wordlist]  : (Optional) Path to your custom DNS bruteforce wordlist.
+                 Default: wordlist.txt
+-v             : (Optional) Enables verbose output for Subfinder.
+
+PHASES & OUTPUTS:
+-----------------
+Phase 1: Passive Discovery -> passive-subdomains.txt
+Phase 2: DNS Resolution    -> resolved.txt
+Phase 3: Active Discovery  -> bruteforce-results.txt & permutations.txt
+Phase 4: Web Probing       -> all-live-subs.txt & metadata.txt
+Phase 5: Network Exposure  -> services.txt & nmap_report.txt
+
+FINAL REPORT:
+-------------
+At the end of the run, the script automatically triggers 'formatter.py' 
+to generate:
+
+   ==> recon_report.md <==
+
+This file contains a breakdown of all findings, including technical 
+metadata (IPs, CNAMEs, Tech Stacks) in an easy-to-read table format.
